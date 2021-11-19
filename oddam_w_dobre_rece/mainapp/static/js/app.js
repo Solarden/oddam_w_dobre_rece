@@ -2,6 +2,12 @@ document.addEventListener("DOMContentLoaded", function() {
   /**
    * HomePage - Help section
    */
+  // const test = document.querySelector(".help--buttons")
+  // console.log(test.children)
+  // test.addEventListener('click', evt => {
+  //
+  // })
+
   class Help {
     constructor($el) {
       this.$el = $el;
@@ -38,11 +44,10 @@ document.addEventListener("DOMContentLoaded", function() {
     changeSlide(e) {
       e.preventDefault();
       const $btn = e.target;
-
       // Buttons Active class change
       [...this.$buttonsContainer.children].forEach(btn => btn.firstElementChild.classList.remove("active"));
       $btn.classList.add("active");
-
+      // console.log('click')
       // Current slide
       this.currentSlide = $btn.parentElement.dataset.id;
 

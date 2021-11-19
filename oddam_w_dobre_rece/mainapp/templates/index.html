@@ -27,7 +27,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
+    <script src="../static/js/app.js"></script>
     <section id="stats" class="stats">
         <div class="container container--85">
             <div class="stats--item">
@@ -88,15 +88,21 @@
 
     <section id="help" class="help">
         <h2>Komu pomagamy?</h2>
-
         <ul class="help--buttons">
-            <li data-id="1"><a href="#" class="btn btn--without-border active">Fundacjom</a></li>
-            <li data-id="2"><a href="#" class="btn btn--without-border">Organizacjom pozarządowym</a></li>
-            <li data-id="3"><a href="#" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
+            <li data-id="1"><a href="#help"
+                               {% if request.GET.urlencode.0 == 'f' %}class="btn btn--without-border active"
+                               {% elif request.GET.urlencode.0 is Null %}class="btn btn--without-border active"
+                               {% else %}class="btn btn--without-border"{% endif %}>Fundacjom</a></li>
+            <li data-id="2"><a href="#help"
+                               {% if request.GET.urlencode.0 == 'o' %}class="btn btn--without-border active"
+                               {% else %}class="btn btn--without-border"{% endif %}>Organizacjom pozarządowym</a></li>
+            <li data-id="3"><a href="#help" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
         </ul>
 
         <!-- SLIDE 1 -->
-        <div class="help--slides active" data-id="1">
+        <div {% if request.GET.urlencode.0 == 'f' %}class="help--slides active"
+             {% elif request.GET.urlencode.0 is Null %}class="help--slides active"
+             {% else %}class="help--slides"{% endif %} data-id="1">
             <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, Organizacji pozarządowych oraz lokalnych
                 zbiórek, z którymi współpracujemy. Możesz sprawdzić czym
                 się zajmują, komu pomagają i czego potrzebują.</p>
@@ -116,26 +122,27 @@
                     </li>
                 {% endfor %}
             </ul>
-        <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+            {#        <ul class="help--slides-pagination">#}
+            {#              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>#}
+            {#              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>#}
+            {#            </ul>#}
+            <ul class="help--slides-pagination">
+                {% for n in p_foundation.paginator.page_range %}
+                    {% if p_foundation.number == n %}
+                        <a href="#help" class="btn btn--small btn--without-border active"
+                           data-page="1">{{ n }}</a>
+                    {% elif n > p_foundation.number|add:'-5' and n < p_foundation.number|add:'5' %}
+                        <a href="?f_page={{ n }}#help" class="btn btn--small btn--without-border"
+                           data-page="1">{{ n }}</a>
+                    {% endif %}
+                {% endfor %}
             </ul>
-{#            <ul class="help--slides-pagination">#}
-{#                {% for n in p_foundation.paginator.page_range %}#}
-{#                    {% if p_foundation.number == n %}#}
-{#                        <li><a href="#" class="btn btn--small btn--without-border active"#}
-{#                               data-page="1">{{ n }}</a></li>#}
-{#                    {% elif n > p_foundation.number|add:'-5' and n < p_foundation.number|add:'5' %}#}
-{#                        <li><a href="?f_page={{ n }}#help" class="btn btn--small btn--without-border"#}
-{#                           data-page="1">{{ n }}</a></li>#}
-{#                    {% endif %}#}
-{#                {% endfor %}#}
-{#            </ul>#}
         </div>
 
 
         <!-- SLIDE 2 -->
-        <div class="help--slides" data-id="2">
+        <div {% if request.GET.urlencode.0 == 'o' %}class="help--slides active"
+             {% else %}class="help--slides"{% endif %} data-id="2">
             <p>
                 W naszej bazie znajdziesz listę zweryfikowanych Fundacji, Organizacji pozarządowych oraz lokalnych
                 zbiórek, z którymi współpracujemy. Możesz sprawdzić czym
@@ -158,50 +165,46 @@
             <ul class="help--slides-pagination">
                 {% for n in p_organization.paginator.page_range %}
                     {% if p_organization.number == n %}
-                        <li><a href="#" class="btn btn--small btn--without-border active"
-                               data-page="2">{{ n }}</a></li>
+                        <a href="#help" class="btn btn--small btn--without-border active"
+                           data-page="2">{{ n }}</a>
                     {% elif n > p_organization.number|add:'-5' and n < p_organization.number|add:'5' %}
-                        <li><a href="?o_page={{ n }}#help" class="btn btn--small btn--without-border"
-                           data-page="2">{{ n }}</a></li>
+                        <a href="?o_page={{ n }}#help" class="btn btn--small btn--without-border"
+                           data-page="2">{{ n }}</a>
                     {% endif %}
                 {% endfor %}
             </ul>
         </div>
         <!-- SLIDE 3 -->
-        <div class="help--slides" data-id="3">
+        <div {% if request.GET.urlencode.0 == 'c' %}class="help--slides active"
+             {% else %}class="help--slides"{% endif %} data-id="3">
             <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, Organizacji pozarządowych oraz lokalnych
                 zbiórek, z którymi współpracujemy. Możesz sprawdzić czym
                 się zajmują, komu pomagają i czego potrzebują.</p>
             <ul class="help--slides-items">
-                <li>
-                    <div class="col">
-                        <div class="title">Lokalna zbiórka 1</div>
-                        <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-                    </div>
+                {% for item in p_collections %}
+                    <li>
+                        <div class="col">
+                            <div class="title">Lokalna zbiórka {{ item }}</div>
+                            <div class="subtitle">Cel i misja: {{ item.description }}</div>
+                        </div>
 
-                    <div class="col">
-                        <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="col">
-                        <div class="title">Lokalna zbiórka 2</div>
-                        <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-                    </div>
-
-                    <div class="col">
-                        <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-                    </div>
-                </li>
+                        <div class="col">
+                            <div class="text">{% for i in item.categories.all %}{{ i }}, {% endfor %}</div>
+                        </div>
+                    </li>
+                {% endfor %}
             </ul>
-
-            <!-- Pagination
             <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+            {% for n in p_collections.paginator.page_range %}
+                {% if p_collections.number == n %}
+                    <a href="#help" class="btn btn--small btn--without-border active"
+                       data-page="2">{{ n }}</a>
+                {% elif n > p_collections.number|add:'-5' and n < p_collections.number|add:'5' %}
+                    <a href="?o_page={{ n }}#help" class="btn btn--small btn--without-border"
+                       data-page="2">{{ n }}</a>
+                {% endif %}
+            {% endfor %}
             </ul>
-            -->
         </div>
     </section>
 
