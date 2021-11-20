@@ -34,7 +34,10 @@ class LandingPage(View):
 
 class AddDonation(View):
     def get(self, request):
-        return render(request, 'form.html')
+        institutions = Institution.objects.all()
+        return render(request, 'form.html', {
+            'institutions': institutions
+        })
 
 
 class Login(View):
