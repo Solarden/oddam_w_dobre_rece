@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 # Create your views here.
+from django.urls import reverse_lazy, reverse
 from django.views import View
 
 from mainapp.models import Donation, Institution
@@ -44,7 +47,29 @@ class Login(View):
     def get(self, request):
         return render(request, 'login.html')
 
+    def post(self, request):
+        try:
+            if User.objects.get(username=request.POST.get('email')):
+                user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
+                login(request, user)
+                return redirect(reverse_lazy('landing_page'))
+            else:
+                return redirect(reverse_lazy('login'))
+        except User.DoesNotExist:
+            return redirect(reverse('register'))
+
 
 class Register(View):
     def get(self, request):
         return render(request, 'register.html')
+
+    def post(self, request):
+        first_name = request.POST.get('name')
+        last_name = request.POST.get('surname')
+        email = request.POST.get('email')
+        if request.POST.get('password') == request.POST.get('password2'):
+            User.objects.create_user(username=email, email=email, password=request.POST.get('password'),
+                                     first_name=first_name, last_name=last_name)
+            return redirect(reverse_lazy('login'))
+        else:
+            return render(request, 'register.html', {'error_message': 'Wprowadzone hasła są różne!'})

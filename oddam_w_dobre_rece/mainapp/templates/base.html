@@ -17,7 +17,10 @@
             <li><a href="{% url 'login' %}#login">Zaloguj</a></li>
             <li class="highlighted"><a href="{% url 'register' %}#register">Załóż konto</a></li>
             <li class="logged-user">
-                Witaj Agata
+                {{ user }}
+{#                {% if user is is_authenticated %}#}
+{#                Witaj Agata#}
+{#                {% endif %}#}
                 <ul class="dropdown">
                     <li><a href="#">Profil</a></li>
                     <li><a href="#">Ustawienia</a></li>
