@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const catList = [];
     const clu = document.querySelector("#c-l-u")
     if (clu.checked === true) {
-        catList.push(1)
+        catList.push(2)
         if (clu.checked === false) {
             catList.pop()
         }
@@ -278,21 +278,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     const t = document.querySelector("#t-")
     if (t.checked === true) {
-        catList.push(3)
+        catList.push(6)
         if (t.checked === false) {
             catList.pop()
         }
     }
     const b = document.querySelector("#b-")
     if (b.checked === true) {
-        catList.push(4)
+        catList.push(8)
         if (b.checked === false) {
             catList.pop()
         }
     }
     const o = document.querySelector("#o-")
     if (o.checked === true) {
-        catList.push(5)
+        catList.push(3, 4, 5, 6, 7)
         if (o.checked === false) {
             catList.pop()
         }
@@ -312,13 +312,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     console.log(catList)
     console.log(divCat)
-    for (let i = 0; i < catList.length; i++) {
-        // console.log(typeof toString(catList[i]))
-        // console.log(typeof divCat[i])
-        if (divCat.includes(catList[i])) {
-            institutions[0].hidden = true
-            console.log('tak')
-        }
-    }
+    // for (let i = 0; i < institutions.length; i++) {
+    //     for (let y = 0; y < catList.length; y++) {
+    //         if (catList.indexOf(divCat[y] !== -1)) {
+    //             institutions[i].hidden = false
+    //         }
+    //     }
+    // }
+
+    // for (let i = 0; i < catList.length; i++) {
+    //     // console.log(typeof toString(catList[i]))
+    //     // console.log(typeof divCat[i])
+    //     if (divCat.includes(catList[i])) {
+    //         institutions[0].hidden = false
+    //         console.log('tak')
+    //     }
+    // }
 
 });
