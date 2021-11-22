@@ -1,4 +1,5 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
@@ -35,7 +36,9 @@ class LandingPage(View):
                        })
 
 
-class AddDonation(View):
+class AddDonation(LoginRequiredMixin, View):
+    login_url = '/login/#login'
+
     def get(self, request):
         institutions = Institution.objects.all()
         return render(request, 'form.html', {
@@ -57,6 +60,12 @@ class Login(View):
                 return redirect(reverse_lazy('login'))
         except User.DoesNotExist:
             return redirect(reverse('register'))
+
+
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return redirect(reverse_lazy('landing_page'))
 
 
 class Register(View):

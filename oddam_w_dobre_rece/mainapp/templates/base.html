@@ -14,21 +14,20 @@
 <header class="header--form-page">
     <nav class="container container--70">
         <ul class="nav--actions">
-            <li><a href="{% url 'login' %}#login">Zaloguj</a></li>
-            <li class="highlighted"><a href="{% url 'register' %}#register">Załóż konto</a></li>
-            <li class="logged-user">
-                {{ user }}
-{#                {% if user is is_authenticated %}#}
-{#                Witaj Agata#}
-{#                {% endif %}#}
-                <ul class="dropdown">
-                    <li><a href="#">Profil</a></li>
-                    <li><a href="#">Ustawienia</a></li>
-                    <li><a href="#">Wyloguj</a></li>
-                </ul>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="logged-user">
+                    Witaj {{ user.first_name }}
+                    <ul class="dropdown">
+                        <li><a href="#">Profil</a></li>
+                        <li><a href="#">Ustawienia</a></li>
+                        <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="{% url 'login' %}#login">Zaloguj</a></li>
+                <li class="highlighted"><a href="{% url 'register' %}#register">Załóż konto</a></li>
+            {% endif %}
         </ul>
-
         <ul>
             <li><a href="{% url 'landing_page' %}" class="btn btn--without-border active">Start</a></li>
             <li><a href="{% url 'landing_page' %}#steps" class="btn btn--without-border">O co chodzi?</a></li>
@@ -40,12 +39,16 @@
     </nav>
 
     <div class="slogan container container--90">
+
         <div class="slogan--item">
+            {% block message %}
+            {% endblock %}
+            {% block slogan %}
             <h1>
                 Oddaj rzeczy, których już nie chcesz<br/>
                 <span class="uppercase">potrzebującym</span>
             </h1>
-
+            {% endblock %}
             <div class="slogan--steps">
                 <div class="slogan--steps-title">Wystarczą 4 proste kroki:</div>
                 <ul class="slogan--steps-boxes">
