@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.urls import reverse_lazy, reverse
 from django.views import View
 
-from mainapp.models import Donation, Institution
+from mainapp.models import Donation, Institution, Category
 
 
 class LandingPage(View):
@@ -41,8 +41,9 @@ class AddDonation(LoginRequiredMixin, View):
 
     def get(self, request):
         institutions = Institution.objects.all()
+        categories = Category.objects.all()
         return render(request, 'form.html', {
-            'institutions': institutions
+            'institutions': institutions, 'categories': categories
         })
 
 

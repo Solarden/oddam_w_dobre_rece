@@ -261,72 +261,23 @@ document.addEventListener("DOMContentLoaded", function () {
         new FormSteps(form);
     }
 
-    const catList = [];
-    const clu = document.querySelector("#c-l-u")
-    if (clu.checked === true) {
-        catList.push(2)
-        if (clu.checked === false) {
-            catList.pop()
+    const firstNextButton = document.querySelector('button');
+    firstNextButton.addEventListener("click", function () {
+        console.log('click')
+        const checkedArray = [];
+        const categories = Array.from(document.querySelectorAll('#category'))
+        const institutions = document.querySelectorAll('#institution')
+        categories.forEach(function (element) {
+            if (element.checked) {
+                checkedArray.push(element.value)
+            }
+        })
+        institutions.forEach(function (institution) {
+            institution.hidden = !Array.from(institution.getAttribute('data-cats')).some(r => checkedArray.includes(r));
+        })
+        if (checkedArray.length === 0) {
+            institutions.forEach(institution => institution.hidden = false)
         }
-    }
-    const cu = document.querySelector("#c-u")
-    if (cu.checked === true) {
-        catList.push(2)
-        if (cu.checked === false) {
-            catList.pop()
-        }
-    }
-    const t = document.querySelector("#t-")
-    if (t.checked === true) {
-        catList.push(6)
-        if (t.checked === false) {
-            catList.pop()
-        }
-    }
-    const b = document.querySelector("#b-")
-    if (b.checked === true) {
-        catList.push(8)
-        if (b.checked === false) {
-            catList.pop()
-        }
-    }
-    const o = document.querySelector("#o-")
-    if (o.checked === true) {
-        catList.push(3, 4, 5, 6, 7)
-        if (o.checked === false) {
-            catList.pop()
-        }
-    }
-    const institutions = document.querySelectorAll("#institutions")
-    // console.log(institutions[0])
-    institutions[0].hidden = false
-
-    for (let i = 0; i < catList.length; i++) {
-    // console.log(catList[i])
-    }
-    // console.log(institutions[0].title.length)
-    const divCat = []
-    for (let i = 0; i < institutions[0].title.length; i++) {
-        // console.log(institutions[0].title[i])
-        divCat.push(parseInt(institutions[0].title[i]))
-    }
-    console.log(catList)
-    console.log(divCat)
-    // for (let i = 0; i < institutions.length; i++) {
-    //     for (let y = 0; y < catList.length; y++) {
-    //         if (catList.indexOf(divCat[y] !== -1)) {
-    //             institutions[i].hidden = false
-    //         }
-    //     }
-    // }
-
-    // for (let i = 0; i < catList.length; i++) {
-    //     // console.log(typeof toString(catList[i]))
-    //     // console.log(typeof divCat[i])
-    //     if (divCat.includes(catList[i])) {
-    //         institutions[0].hidden = false
-    //         console.log('tak')
-    //     }
-    // }
+    })
 
 });
