@@ -261,23 +261,46 @@ document.addEventListener("DOMContentLoaded", function () {
         new FormSteps(form);
     }
 
+    const checkedCategories = [];
     const firstNextButton = document.querySelector('button');
     firstNextButton.addEventListener("click", function () {
-        console.log('click')
+        console.log('step1click')
         const checkedArray = [];
         const categories = Array.from(document.querySelectorAll('#category'))
         const institutions = document.querySelectorAll('#institution')
         categories.forEach(function (element) {
             if (element.checked) {
                 checkedArray.push(element.value)
+                checkedCategories.push(element.parentElement.lastChild.previousSibling.innerText)
             }
         })
+        console.log(checkedCategories)
         institutions.forEach(function (institution) {
             institution.hidden = !Array.from(institution.getAttribute('data-cats')).some(r => checkedArray.includes(r));
         })
         if (checkedArray.length === 0) {
             institutions.forEach(institution => institution.hidden = false)
         }
+    })
+
+    const step4Button = document.querySelector('#step4button')
+    step4Button.addEventListener('click', function () {
+        console.log('step4click')
+        let bags = document.querySelector('#bags').value;
+        switch (bags) {
+            case '1':
+                document.querySelector('#summary-bags').innerText = '1 worek zawierający: ' + checkedCategories.join(', ') + '.';
+                break;
+            case '2':
+            case '3':
+            case '4':
+                document.querySelector('#summary-bags').innerText = `${bags} worki zawierające: ` + checkedCategories.join(', ') + '.';
+                break;
+            default:
+                document.querySelector('#summary-bags').innerText = `${bags} worków zawierające: ` + checkedCategories.join(', ') + '.';
+                break;
+        }
+
     })
 
 });
