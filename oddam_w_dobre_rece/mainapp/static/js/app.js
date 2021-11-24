@@ -2,11 +2,11 @@ document.addEventListener("DOMContentLoaded", function () {
     /**
      * HomePage - Help section
      */
-        // const test = document.querySelector(".help--buttons")
-        // console.log(test.children)
+        // const test = document.querySelector(".help--buttons");
+        // console.log(test.children);
         // test.addEventListener('click', evt => {
         //
-        // })
+        // });
 
     class Help {
         constructor($el) {
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Buttons Active class change
             [...this.$buttonsContainer.children].forEach(btn => btn.firstElementChild.classList.remove("active"));
             $btn.classList.add("active");
-            // console.log('click')
+            // console.log('click');
             // Current slide
             this.currentSlide = $btn.parentElement.dataset.id;
 
@@ -263,31 +263,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const checkedCategories = [];
     const firstNextButton = document.querySelector('button');
+    const institutions = document.querySelectorAll('#institution');
     firstNextButton.addEventListener("click", function () {
-        console.log('step1click')
+        console.log('step1click');
         const checkedArray = [];
-        const categories = Array.from(document.querySelectorAll('#category'))
-        const institutions = document.querySelectorAll('#institution')
+        const categories = Array.from(document.querySelectorAll('#category'));
         categories.forEach(function (element) {
             if (element.checked) {
-                checkedArray.push(element.value)
-                checkedCategories.push(element.parentElement.lastChild.previousSibling.innerText)
+                checkedArray.push(element.value);
+                checkedCategories.push(element.parentElement.lastChild.previousSibling.innerText);
             }
-        })
-        console.log(checkedCategories)
+        });
+        console.log(checkedCategories);
         institutions.forEach(function (institution) {
             institution.hidden = !Array.from(institution.getAttribute('data-cats')).some(r => checkedArray.includes(r));
-        })
+        });
         if (checkedArray.length === 0) {
-            institutions.forEach(institution => institution.hidden = false)
+            institutions.forEach(institution => institution.hidden = false);
         }
-    })
+    });
 
-    const step4Button = document.querySelector('#step4button')
+    const step4Button = document.querySelector('#step4button');
     step4Button.addEventListener('click', function () {
         console.log('step4click')
         let bags = document.querySelector('#bags').value;
         switch (bags) {
+            case '0':
+                document.querySelector('#summary-bags').innerText = 'Brak wskazanej ilości worków';
+                break;
             case '1':
                 document.querySelector('#summary-bags').innerText = '1 worek zawierający: ' + checkedCategories.join(', ') + '.';
                 break;
@@ -300,7 +303,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.querySelector('#summary-bags').innerText = `${bags} worków zawierające: ` + checkedCategories.join(', ') + '.';
                 break;
         }
-
-    })
-
+        institutions.forEach(function (institution) {
+            if (institution.firstElementChild.firstElementChild.checked) {
+                switch (institution.getAttribute('data-type')) {
+                    case '0':
+                        document.querySelector('#summary-institution').innerText = `Dla fundacji ${institution.getAttribute('data-name')}.`;
+                        break;
+                    case '1':
+                        document.querySelector('#summary-institution').innerText = `Dla organizacji pozarządowej ${institution.getAttribute('data-name')}.`;
+                        break;
+                    case '2':
+                        document.querySelector('#summary-institution').innerText = `Dla zbiórki lokalnej ${institution.getAttribute('data-name')}.`;
+                        break;
+                }
+            }
+        });
+        document.querySelector('#summary-pickup-info').innerHTML = `<li>${document.querySelector('#pickup_street').value}</li>
+        <li>${document.querySelector('#pickup_city').value}</li>
+        <li>${document.querySelector('#pickup_postcode').value}</li>
+        <li>${document.querySelector('#pickup_phone').value}</li>`;
+        document.querySelector('#summary-pickup-time').innerHTML = `<li>${document.querySelector('#pickup_date').value}</li>
+        <li>${document.querySelector('#pickup_time').value}</li>
+        <li>${document.querySelector('#pickup_info').value}</li>`;
+    });
+    const submitPickup = document.querySelector('#pickup_submit');
+    submitPickup.addEventListener('click', function () {
+        document.querySelector('#pickup_form').submit();
+    });
 });
