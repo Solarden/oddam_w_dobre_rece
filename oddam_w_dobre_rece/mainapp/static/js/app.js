@@ -307,13 +307,13 @@ document.addEventListener("DOMContentLoaded", function () {
             if (institution.firstElementChild.firstElementChild.checked) {
                 switch (institution.getAttribute('data-type')) {
                     case '0':
-                        document.querySelector('#summary-institution').innerText = `Dla fundacji ${institution.getAttribute('data-name')}.`;
+                        document.querySelector('#summary-institution').innerText = `Dla fundacji ${institution.getAttribute('data-name')} mieszczącej się w miejscowości: ${institution.getAttribute('data-city')}.`;
                         break;
                     case '1':
-                        document.querySelector('#summary-institution').innerText = `Dla organizacji pozarządowej ${institution.getAttribute('data-name')}.`;
+                        document.querySelector('#summary-institution').innerText = `Dla organizacji pozarządowej ${institution.getAttribute('data-name')} mieszczącej się w miejscowości: ${institution.getAttribute('data-city')}.`;
                         break;
                     case '2':
-                        document.querySelector('#summary-institution').innerText = `Dla zbiórki lokalnej ${institution.getAttribute('data-name')}.`;
+                        document.querySelector('#summary-institution').innerText = `Dla zbiórki lokalnej ${institution.getAttribute('data-name')} mieszczącej się w miejscowości: ${institution.getAttribute('data-city')}.`;
                         break;
                 }
             }

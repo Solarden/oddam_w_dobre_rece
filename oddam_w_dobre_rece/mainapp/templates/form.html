@@ -26,7 +26,7 @@
             <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
             <form method="post" action="" id="pickup_form">
-            {% csrf_token %}
+                {% csrf_token %}
                 <!-- STEP 1: class .active is switching steps -->
                 <div data-step="1" class="active">
                     <h3>Zaznacz co chcesz oddać:</h3>
@@ -74,16 +74,18 @@
                         <div class="form-group form-group--checkbox" id="institution"
                              data-type="{{ institution.type }}"
                              data-name="{{ institution.name }}"
+                             data-city="{{ institution.city_location }}"
                              data-cats="{% for cat in institution.categories.all %}{{ cat.pk }}{% endfor %}" hidden>
                             <label>
                                 <input type="radio" name="organization" value="{{ institution.pk }}"/>
                                 <span class="checkbox radio"></span>
                                 <span class="description">
                   <div class="title">{% if institution.type == 0 %}Fundacja {% elif institution.type == 1 %} Organizacja
-                      pozarządowa{% else %}Zbiórka lokalna{% endif %} {{ institution }}</div>
+                      pozarządowa{% else %}Zbiórka
+                      lokalna{% endif %} {{ institution }} - {{ institution.city_location }}</div>
                   <div class="subtitle">
-                    Cel i misja: {{ institution.description }}
-                      Kategorie {% for cat in institution.categories.all %}{{ cat }} {{ cat.pk }} {% endfor %}
+                    Cel i misja: {{ institution.description }}<br>
+                      Kategorie: {% for cat in institution.categories.all %}{{ cat }}, {% endfor %}
                   </div>
                 </span>
                             </label>
@@ -159,7 +161,7 @@
                                 <li>
                                     <span class="icon icon-bag"></span>
                                     <span class="summary--text"
-                                    id="summary-bags">4 worki ubrań w dobrym stanie dla dzieci</span>
+                                          id="summary-bags">4 worki ubrań w dobrym stanie dla dzieci</span>
                                 </li>
 
                                 <li>

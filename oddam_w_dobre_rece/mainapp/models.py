@@ -22,6 +22,7 @@ class Institution(models.Model):
     description = models.TextField()
     type = models.IntegerField(choices=INSTITUTION_TYPES, default=0)
     categories = models.ManyToManyField(Category)
+    city_location = models.CharField(max_length=64)
 
     def __str__(self):
         return self.name
