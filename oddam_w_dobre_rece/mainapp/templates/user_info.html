@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block slogan %}
+        <div id="user">
+            <h2>Witaj {{ user.first_name }}!<br>
+                Informacje o Twoim koncie:
+                <ul>
+                    <li>Imię: {{ user.first_name }}</li>
+                    <li>Nazwisko: {{ user.last_name }}</li>
+                    <li>Adres mailowy: {{ user.email }}</li>
+                </ul>
+            </h2>
+        </div>
+{% endblock %}

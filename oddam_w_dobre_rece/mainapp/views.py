@@ -94,3 +94,8 @@ class Register(View):
             return redirect(reverse_lazy('login'))
         else:
             return render(request, 'register.html', {'error_message': 'Wprowadzone hasła są różne!'})
+
+
+class UserInfo(View):
+    def get(self, request):
+        return render(request, 'user_info.html')
