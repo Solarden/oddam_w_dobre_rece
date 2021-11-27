@@ -419,6 +419,11 @@ h2 {
   font-size: 3.5rem;
 }
 
+h3 {
+  text-align: center;
+  font-size: 3.5rem;
+}
+
 /* line 20, scss/partials/_mixins.scss */
 h2:after {
   content: "";
@@ -1246,6 +1251,10 @@ header nav ul li:last-of-type {
           align-items: center;
   text-align: center;
   padding: 0 35px;
+}
+
+.steps--item .center {
+  text-align: justify;
 }
 
 /* line 24, scss/modules/homepage-sections/_steps.scss */

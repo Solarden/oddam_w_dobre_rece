@@ -98,4 +98,17 @@ class Register(View):
 
 class UserInfo(View):
     def get(self, request):
-        return render(request, 'user_info.html')
+        donations = Donation.objects.filter(user=request.user).order_by('is_taken')
+        return render(request, 'user_info.html', {'donations': donations})
+
+    def post(self, request):
+        donations = Donation.objects.filter(user=request.user).order_by('is_taken')
+        for i in Donation.objects.all():
+            y = Donation.objects.get(pk=i.pk)
+            if request.POST.get('is_taken' + str(i.pk)):
+                y.is_taken = True
+                y.save()
+            elif not request.POST.get('is_taken' + str(i.pk)):
+                y.is_taken = False
+                y.save()
+        return render(request, 'user_info.html', {'error_message': 'Zapisano zmiany!', 'donations': donations})
