@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block slogan %}
+    <form method="post">
+        {% csrf_token %}
+        <div id="user">
+            {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
+            <h2>Edycja konta {{ user.username }}</h2>
+            <div class="slogan--steps-title">
+                <ul>
+                    <li><label>Imię:
+                        <input type="text" placeholder="Wprowadź swoje imię" value="{{ user.first_name }}"
+                               name="first_name">
+                    </label></li>
+                    <li><label>Nazwisko:
+                        <input type="text" placeholder="Wprowadź swoje nazwisko" value="{{ user.last_name }}"
+                               name="last_name">
+                    </label></li>
+                    <li><label>Adres mailowy:
+                        <input type="email" placeholder="Wprowadź swój adres mailowy" value="{{ user.email }}"
+                               name="email">
+                    </label></li>
+                    <li><label>Wprowadź swoje hasło:
+                        <input type="password" placeholder="Wprowadź swoje hasło" name="password">
+                    </label></li>
+                    <br>
+                    <input type="submit" value="Zapisz" class="btn">
+                </ul>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block 4steps %}
+{% endblock %}

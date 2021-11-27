@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 # Create your views here.
@@ -74,7 +75,9 @@ class Login(View):
             return redirect(reverse('register'))
 
 
-class Logout(View):
+class Logout(LoginRequiredMixin, View):
+    login_url = '/login/#login'
+
     def get(self, request):
         logout(request)
         return redirect(reverse_lazy('landing_page'))
@@ -96,7 +99,9 @@ class Register(View):
             return render(request, 'register.html', {'error_message': 'Wprowadzone hasła są różne!'})
 
 
-class UserInfo(View):
+class UserInfo(LoginRequiredMixin, View):
+    login_url = '/login/#login'
+
     def get(self, request):
         donations = Donation.objects.filter(user=request.user).order_by('is_taken')
         return render(request, 'user_info.html', {'donations': donations})
@@ -112,3 +117,44 @@ class UserInfo(View):
                 y.is_taken = False
                 y.save()
         return render(request, 'user_info.html', {'error_message': 'Zapisano zmiany!', 'donations': donations})
+
+
+class UserEdit(LoginRequiredMixin, View):
+    login_url = '/login/#login'
+
+    def get(self, request):
+        return render(request, 'user_edit.html')
+
+    def post(self, request):
+        try:
+            object = User.objects.get(email=request.POST.get('email'))
+            if object.check_password(request.POST.get('password')):
+                object.first_name = request.POST.get('first_name')
+                object.last_name = request.POST.get('last_name')
+                object.email = request.POST.get('email')
+                object.save()
+                return render(request, 'user_info.html', {'error_message': 'Zapisano zmiany!'})
+            else:
+                return render(request, 'user_edit.html', {'error_message': 'Wprowadzone hasło jest nie poprawne!'})
+        except ObjectDoesNotExist:
+            return render(request, 'user_edit.html', {'error_message': 'Wprowadzone hasło jest nie poprawne!'})
+
+
+class UserEditPwd(LoginRequiredMixin, View):
+    login_url = '/login/#login'
+
+    def get(self, request):
+        return render(request, 'user_change_pwd.html')
+
+    def post(self, request):
+        object = User.objects.get(username=request.user.username)
+        if object.check_password(request.POST.get('password')):
+            if request.POST.get('password_new') == request.POST.get('password_new2') and len(
+                    request.POST.get('password_new')) >= 6:
+                object.set_password(request.POST.get('password_new'))
+                object.save()
+                return render(request, 'user_info.html', {'error_message': 'Zapisano zmiany!'})
+            else:
+                return render(request, 'user_change_pwd.html', {'error_message': 'Wprowadzone hasła się różnią!'})
+        else:
+            return render(request, 'user_change_pwd.html', {'error_message': 'Wprowadzone hasło jest nie poprawne!'})
