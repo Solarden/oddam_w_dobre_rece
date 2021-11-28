@@ -1,8 +1,15 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 
 
 # Create your models here.
+
+class SiteUser(AbstractUser):
+    is_email_verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
+
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
@@ -39,8 +46,9 @@ class Donation(models.Model):
     pick_up_date = models.DateField()
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField()
-    user = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    user = models.ForeignKey(SiteUser, null=True, on_delete=models.PROTECT)
     is_taken = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user} - {self.pick_up_date}'
+

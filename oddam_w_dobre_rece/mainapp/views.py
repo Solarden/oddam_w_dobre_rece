@@ -1,14 +1,19 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 # Create your views here.
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
-
-from mainapp.models import Donation, Institution, Category
+from .utils import generate_token
+from mainapp.models import Donation, Institution, Category, SiteUser
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 
 class LandingPage(View):
@@ -65,13 +70,17 @@ class Login(View):
 
     def post(self, request):
         try:
-            if User.objects.get(username=request.POST.get('email')):
+            if SiteUser.objects.get(username=request.POST.get('email')):
                 user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-                login(request, user)
-                return redirect(reverse_lazy('landing_page'))
+                if not user.is_email_verified:
+                    return render(request, 'login.html',
+                                  {'error_message': 'Twoje konto nie jest aktywne sprawdź swoją skrzynkę mailową!'})
+                else:
+                    login(request, user)
+                    return redirect(reverse_lazy('landing_page'))
             else:
                 return redirect(reverse_lazy('login'))
-        except User.DoesNotExist:
+        except SiteUser.DoesNotExist:
             return redirect(reverse('register'))
 
 
@@ -92,11 +101,34 @@ class Register(View):
         last_name = request.POST.get('surname')
         email = request.POST.get('email')
         if request.POST.get('password') == request.POST.get('password2'):
-            User.objects.create_user(username=email, email=email, password=request.POST.get('password'),
-                                     first_name=first_name, last_name=last_name)
+            user = SiteUser.objects.create_user(username=email, email=email, password=request.POST.get('password'),
+                                                first_name=first_name, last_name=last_name)
+            current_site = get_current_site(request)
+            email_subject = 'Aktywuj swoje konto'
+            email_body = render_to_string('activate.html', {'user': user, 'domain': current_site,
+                                                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                                                            'token': generate_token.make_token(user)
+                                                            })
+            email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_FROM_USER,
+                                 to=[user.email])
+            email.send()
             return redirect(reverse_lazy('login'))
         else:
             return render(request, 'register.html', {'error_message': 'Wprowadzone hasła są różne!'})
+
+
+class ActivateUser(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = SiteUser.objects.get(pk=uid)
+        except Exception as e:
+            user = None
+        if user and generate_token.check_token(user, token):
+            user.is_email_verified = True
+            user.save()
+            return render(request, 'login.html', {'error_message': 'Konto zostało aktywowane!'})
+        return render(request, 'activate_failed.html', {'user': user})
 
 
 class UserInfo(LoginRequiredMixin, View):
@@ -127,7 +159,7 @@ class UserEdit(LoginRequiredMixin, View):
 
     def post(self, request):
         try:
-            object = User.objects.get(email=request.POST.get('email'))
+            object = SiteUser.objects.get(email=request.POST.get('email'))
             if object.check_password(request.POST.get('password')):
                 object.first_name = request.POST.get('first_name')
                 object.last_name = request.POST.get('last_name')
@@ -147,7 +179,7 @@ class UserEditPwd(LoginRequiredMixin, View):
         return render(request, 'user_change_pwd.html')
 
     def post(self, request):
-        object = User.objects.get(username=request.user.username)
+        object = SiteUser.objects.get(username=request.user.username)
         if object.check_password(request.POST.get('password')):
             if request.POST.get('password_new') == request.POST.get('password_new2') and len(
                     request.POST.get('password_new')) >= 6:

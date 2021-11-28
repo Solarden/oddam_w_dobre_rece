@@ -24,38 +24,4 @@
 {% block 4steps %}
 {% endblock %}
 {% block content %}
-    <section class="help">
-        <h2>Lista przekazanych darów:</h2>
-        <div class="help--slides active">
-            <ul class="help--slides-items">
-                <form method="post">
-                    {% csrf_token %}
-                    {% for donation in donations %}
-                        <li>
-                            <div class="col">
-                                <div class="title">{% if donation.institution.type == 0 %}
-                                    Fundacja {% elif donation.institution.type == 1 %}Organizacja
-                                    pozarządowa {% elif donation.institution.type == 2 %}Zbiórka
-                                    lokalna {% endif %}{{ donation.institution }}</div>
-                                <div class="subtitle">Ilość przekazanych worków: {{ donation.quantity }}<br>
-                                    data odbioru: {{ donation.pick_up_date }} {% if donation.is_taken %}
-                                        (odebrany){% else %}(nie odebrany){% endif %}</div>
-                            </div>
-                            <div class="col">
-                                <div class="text">Kategorie: {% for category in donation.categories.all %}
-                                    {{ category }},
-                                {% endfor %}</div>
-                                <div class="subtitle">Czy został odebrany? <input type="checkbox"
-                                                                                  {% if donation.is_taken %}checked{% endif %}
-                                                                                  name="is_taken{{ donation.pk }}"
-                                                                                  value="{{ donation.pk }}"></div>
-                            </div>
-                        </li>
-                    {% endfor %}
-                    <button class="btn" type="submit">Zapisz zmiany</button>
-                </form>
-            </ul>
-        </div>
-    </section>
-
 {% endblock %}

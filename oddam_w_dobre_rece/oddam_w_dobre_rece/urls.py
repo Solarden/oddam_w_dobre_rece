@@ -22,6 +22,7 @@ urlpatterns = [
     path('', views.LandingPage.as_view(), name='landing_page'),
     path('add_donation/', views.AddDonation.as_view(), name='add_donation'),
     path('register/', views.Register.as_view(), name='register'),
+    path('activate_user/<uidb64>/<token>', views.ActivateUser.as_view(), name='activate'),
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', views.Logout.as_view(), name='logout'),
     path('user/', views.UserInfo.as_view(), name='user'),

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% block message %}
+{% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
+{% endblock %}
 {% block content %}
     <section class="login-page" id="login">
         <h2>Zaloguj się</h2>
@@ -15,7 +17,7 @@
             </div>
 
             <div class="form-group form-group--buttons">
-                <a href="#" class="btn btn--without-border">Załóż konto</a>
+                <a href="{% url 'register' %}#register" class="btn btn--without-border">Załóż konto</a>
                 <button class="btn" type="submit">Zaloguj się</button>
             </div>
         </form>
