@@ -12,7 +12,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from .utils import generate_token
 from mainapp.models import Donation, Institution, Category, SiteUser
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.conf import settings
 
 
@@ -112,7 +112,9 @@ class Register(View):
             email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_FROM_USER,
                                  to=[user.email])
             email.send()
-            return redirect(reverse_lazy('login'))
+            # send_mail(email_subject, email_body, settings.EMAIL_FROM_USER, [user.email])
+            return render(request, 'login.html',
+                          {'error_message': 'Konto zostało zarejestrowane sprawdź skrzynkę pocztową w celu aktywacji'})
         else:
             return render(request, 'register.html', {'error_message': 'Wprowadzone hasła są różne!'})
 

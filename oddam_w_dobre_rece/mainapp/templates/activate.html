@@ -4,6 +4,6 @@ Cześć {{ user.first_name }}
 
 Proszę kliknij w link poniżej, aby potwierdzić swoje konto.
 
-http://{{ domain }}/{% url 'activate' uidb64=uid token=token %}
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 
 {% endautoescape %}
