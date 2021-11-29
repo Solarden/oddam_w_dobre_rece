@@ -125,7 +125,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'mainapp.SiteUser'
 
-# EMAIL CONFIG
+# EMAIL CONFIG/SMTP Config
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_FROM_USER = config('EMAIL_FROM_USER')
