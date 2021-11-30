@@ -101,20 +101,47 @@ class Register(View):
         last_name = request.POST.get('surname')
         email = request.POST.get('email')
         if request.POST.get('password') == request.POST.get('password2'):
-            user = SiteUser.objects.create_user(username=email, email=email, password=request.POST.get('password'),
-                                                first_name=first_name, last_name=last_name)
-            current_site = get_current_site(request)
-            email_subject = 'Aktywuj swoje konto'
-            email_body = render_to_string('activate.html', {'user': user, 'domain': current_site,
-                                                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                                                            'token': generate_token.make_token(user)
-                                                            })
-            email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_FROM_USER,
-                                 to=[user.email])
-            email.send()
-            # send_mail(email_subject, email_body, settings.EMAIL_FROM_USER, [user.email])
-            return render(request, 'login.html',
-                          {'error_message': 'Konto zostało zarejestrowane sprawdź skrzynkę pocztową w celu aktywacji'})
+            pwd = request.POST.get('password')
+            special_symbols = ['$', '@', '#', '%', '!']
+            error_messages = []
+            if len(pwd) < 8:
+                error_messages.append('Wprowadzone hasło jest za krótkie minimum 8 znaków!')
+                return render(request, 'register.html',
+                              {'error_message': 'Wprowadzone hasło jest za krótkie minimum 8 znaków!'})
+            elif not any(char.isdigit() for char in pwd):
+                error_messages.append('Wprowadzone hasło powinno mieć przynajmniej jedną liczbę!')
+                return render(request, 'register.html',
+                              {'error_message': 'Wprowadzone hasło powinno mieć przynajmniej jedną liczbę!'})
+            elif not any(char.isupper() for char in pwd):
+                error_messages.append('Wprowadzone hasło powinno mieć przynajmniej jedną dużą literę!')
+                return render(request, 'register.html',
+                              {'error_message': 'Wprowadzone hasło powinno mieć przynajmniej jedną dużą literę!'})
+            elif not any(char.islower() for char in pwd):
+                error_messages.append('Wprowadzone hasło powinno mieć przynajmniej jedną małą literę!')
+                return render(request, 'register.html',
+                              {'error_message': 'Wprowadzone hasło powinno mieć przynajmniej jedną małą literę!'})
+            elif not any(char in special_symbols for char in pwd):
+                error_messages.append('Wprowadzone hasło powinno mieć przynajmniej jeden specjalny znak !@#$%.')
+                return render(request, 'register.html', {
+                    'error_message': 'Wprowadzone hasło powinno mieć przynajmniej jeden specjalny znak !@#$%.'})
+            elif len(error_messages) > 0:
+                return render(request, 'register.html', {'error_message': 'xd'})
+            else:
+                user = SiteUser.objects.create_user(username=email, email=email, password=request.POST.get('password'),
+                                                    first_name=first_name, last_name=last_name)
+                current_site = get_current_site(request)
+                email_subject = 'Aktywuj swoje konto'
+                email_body = render_to_string('activate.html', {'user': user, 'domain': current_site,
+                                                                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                                                                'token': generate_token.make_token(user)
+                                                                })
+                email = EmailMessage(subject=email_subject, body=email_body, from_email=settings.EMAIL_FROM_USER,
+                                     to=[user.email])
+                email.send()
+                # send_mail(email_subject, email_body, settings.EMAIL_FROM_USER, [user.email])
+                return render(request, 'login.html',
+                              {
+                                  'error_message': 'Konto zostało zarejestrowane sprawdź skrzynkę pocztową w celu aktywacji'})
         else:
             return render(request, 'register.html', {'error_message': 'Wprowadzone hasła są różne!'})
 
