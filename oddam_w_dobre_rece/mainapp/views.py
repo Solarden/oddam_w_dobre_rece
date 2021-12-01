@@ -12,7 +12,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from .utils import generate_token
 from mainapp.models import Donation, Institution, Category, SiteUser
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import EmailMessage
 from django.conf import settings
 
 
@@ -219,3 +219,10 @@ class UserEditPwd(LoginRequiredMixin, View):
                 return render(request, 'user_change_pwd.html', {'error_message': 'Wprowadzone hasła się różnią!'})
         else:
             return render(request, 'user_change_pwd.html', {'error_message': 'Wprowadzone hasło jest nie poprawne!'})
+
+
+class ContactUs(LoginRequiredMixin, View):
+    login_url = '/login/#login'
+
+    def get(self, request):
+        return render(request, 'contact_us.html')
