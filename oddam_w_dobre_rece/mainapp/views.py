@@ -226,3 +226,18 @@ class ContactUs(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, 'contact_us.html')
+
+    def post(self, request):
+        admins = SiteUser.objects.filter(is_staff=True)
+        admin_emails = []
+        for admin in admins:
+            admin_emails.append(admin)
+        email_subject = f'Wiadomość od {request.user.email}'
+        email_body = render_to_string('contact_us_mail.html',
+                                      {'user': request.user.email, 'first_name': request.POST.get('name'),
+                                       'last_name': request.POST.get('surname'),
+                                       'content': request.POST.get('message')})
+        email = EmailMessage(subject=email_subject, body=email_body, from_email=request.user.email,
+                             to=admin_emails)
+        email.send()
+        return render(request, 'index.html', {'error_message': 'Wiadomość została wysłana!'})
