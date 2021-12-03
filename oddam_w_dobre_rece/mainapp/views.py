@@ -72,12 +72,16 @@ class Login(View):
         try:
             if SiteUser.objects.get(username=request.POST.get('email')):
                 user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-                if not user.is_email_verified:
-                    return render(request, 'login.html',
-                                  {'error_message': 'Twoje konto nie jest aktywne sprawdź swoją skrzynkę mailową!'})
+                if user is not None:
+                    if not user.is_email_verified:
+                        return render(request, 'login.html',
+                                      {'error_message': 'Twoje konto nie jest aktywne sprawdź swoją skrzynkę mailową!'})
+                    else:
+                        login(request, user)
+                        return redirect(reverse_lazy('landing_page'))
                 else:
-                    login(request, user)
-                    return redirect(reverse_lazy('landing_page'))
+                    return render(request, 'login.html',
+                           {'error_message': 'Wprowadzono błędne dane!'})
             else:
                 return redirect(reverse_lazy('login'))
         except SiteUser.DoesNotExist:
