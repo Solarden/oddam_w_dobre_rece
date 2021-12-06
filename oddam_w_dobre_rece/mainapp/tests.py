@@ -122,4 +122,55 @@ def test_user_info_with_login(site_user):
     client = Client()
     client.force_login(site_user)
     response = client.get(reverse('user'))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_user_edit_no_login():
+    client = Client()
+    response = client.get(reverse('user_edit'))
     assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_user_edit_with_login(site_user):
+    client = Client()
+    client.force_login(site_user)
+    response = client.get(reverse('user_edit'))
+    assert response.status_code == 200
+
+
+# TODO user edit post
+
+@pytest.mark.django_db
+def test_user_edit_pwd_no_login():
+    client = Client()
+    response = client.get(reverse('user_edit_pwd'))
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_user_edit_pwd_with_login(site_user):
+    client = Client()
+    client.force_login(site_user)
+    response = client.get(reverse('user_edit_pwd'))
+    assert response.status_code == 200
+
+
+# TODO user edit pwd post
+
+@pytest.mark.django_db
+def test_contact_us_no_login():
+    client = Client()
+    response = client.get(reverse('contact_us'))
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_contact_us_with_login(site_user):
+    client = Client()
+    client.force_login(site_user)
+    response = client.get(reverse('contact_us'))
+    assert response.status_code == 200
+
+# TODO contact us post
