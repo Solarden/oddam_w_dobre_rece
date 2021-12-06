@@ -28,11 +28,11 @@ class LandingPage(View):
         f_page = request.GET.get('f_page')
         o_page = request.GET.get('o_page')
         c_page = request.GET.get('c_page')
-        p_foundations = Paginator(foundations, 1)
+        p_foundations = Paginator(foundations, 5)
         p_foundations_page = p_foundations.get_page(f_page)
-        p_organization = Paginator(organizations, 1)
+        p_organization = Paginator(organizations, 5)
         p_organization_page = p_organization.get_page(o_page)
-        p_collections = Paginator(local_collections, 1)
+        p_collections = Paginator(local_collections, 5)
         p_collections_page = p_collections.get_page(c_page)
         return render(request, 'index.html',
                       {'stat_bags': stat_passed_bags, 'stat_institutions': stat_supported_institutions,
