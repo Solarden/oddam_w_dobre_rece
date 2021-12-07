@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block slogan %}
+    {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
+    <h1>
+        Zacznij pomagać!<br/>
+        Oddaj niechciane rzeczy w zaufane ręce
+    </h1>
+{% endblock %}
+{% block content %}
+    <script src="../static/js/app.js"></script>
+    <section id="stats" class="stats">
+        <div class="container container--85">
+            <div class="stats--item">
+                <em>{{ stat_bags }}</em>
+                <h3>Oddanych worków</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum
+                    tempora!</p>
+            </div>
+
+            <div class="stats--item">
+                <em>{{ stat_institutions }}</em>
+                <h3>Wspartych organizacji</h3>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate
+                    quas quam.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="steps" class="steps">
+        <h2>Wystarczą 4 proste kroki</h2>
+
+        <div class="steps--container">
+            <div class="steps--item">
+                <span class="icon icon--hands"></span>
+                <h3>Wybierz rzeczy</h3>
+                <p>ubrania, zabawki, sprzęt i inne</p>
+            </div>
+            <div class="steps--item">
+                <span class="icon icon--arrow"></span>
+                <h3>Spakuj je</h3>
+                <p>skorzystaj z worków na śmieci</p>
+            </div>
+            <div class="steps--item">
+                <span class="icon icon--glasses"></span>
+                <h3>Zdecyduj komu chcesz pomóc</h3>
+                <p>wybierz zaufane miejsce</p>
+            </div>
+            <div class="steps--item">
+                <span class="icon icon--courier"></span>
+                <h3>Zamów kuriera</h3>
+                <p>kurier przyjedzie w dogodnym terminie</p>
+            </div>
+        </div>
+
+        <a href="{% url 'register' %}#register" class="btn btn--large">Załóż konto</a>
+    </section>
+
+    <section id="about-us" class="about-us">
+        <div class="about-us--text">
+            <h2>O nas</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas vitae animi rem pariatur incidunt
+                libero optio esse quisquam illo omnis.</p>
+            <img src="../static/images/signature.svg" class="about-us--text-signature" alt="Signature"/>
+        </div>
+        <div class="about-us--image"><img src="../static/images/about-us.jpg" alt="People in circle"/></div>
+    </section>
+
+    <section id="help" class="help">
+        <h2>Komu pomagamy?</h2>
+        <ul class="help--buttons">
+            <li data-id="1"><a href="#help"
+                               {% if request.GET.urlencode.0 == 'f' %}class="btn btn--without-border active"
+                               {% elif request.GET.urlencode.0 is Null %}class="btn btn--without-border active"
+                               {% else %}class="btn btn--without-border"{% endif %}>Fundacjom</a></li>
+            <li data-id="2"><a href="#help"
+                               {% if request.GET.urlencode.0 == 'o' %}class="btn btn--without-border active"
+                               {% else %}class="btn btn--without-border"{% endif %}>Organizacjom pozarządowym</a></li>
+            <li data-id="3"><a href="#help" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
+        </ul>
+
+        <!-- SLIDE 1 -->
+        <div {% if request.GET.urlencode.0 == 'f' %}class="help--slides active"
+             {% elif request.GET.urlencode.0 is Null %}class="help--slides active"
+             {% else %}class="help--slides"{% endif %} data-id="1">
+            <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, Organizacji pozarządowych oraz lokalnych
+                zbiórek, z którymi współpracujemy. Możesz sprawdzić czym
+                się zajmują, komu pomagają i czego potrzebują.</p>
+
+            <ul class="help--slides-items">
+                {% for item in p_foundation %}
+                    <li>
+                        <div class="col">
+                            <div class="title">Fundacja {{ item }}</div>
+                            <div class="subtitle">Cel i misja: {{ item.description }}</div>
+                        </div>
+
+                        <div class="col">
+                            <div class="text">
+                                {% for i in item.categories.all %}{{ i }}, {% endfor %}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {#        <ul class="help--slides-pagination">#}
+            {#              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>#}
+            {#              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>#}
+            {#            </ul>#}
+            <ul class="help--slides-pagination">
+                {% for n in p_foundation.paginator.page_range %}
+                    {% if p_foundation.number == n %}
+                        <a href="#help" class="btn btn--small btn--without-border active"
+                           data-page="1">{{ n }}</a>
+                    {% elif n > p_foundation.number|add:'-5' and n < p_foundation.number|add:'5' %}
+                        <a href="?f_page={{ n }}#help" class="btn btn--small btn--without-border"
+                           data-page="1">{{ n }}</a>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <!-- SLIDE 2 -->
+        <div {% if request.GET.urlencode.0 == 'o' %}class="help--slides active"
+             {% else %}class="help--slides"{% endif %} data-id="2">
+            <p>
+                W naszej bazie znajdziesz listę zweryfikowanych Fundacji, Organizacji pozarządowych oraz lokalnych
+                zbiórek, z którymi współpracujemy. Możesz sprawdzić czym
+                się zajmują, komu pomagają i czego potrzebują.
+            </p>
+            <ul class="help--slides-items">
+                {% for item in p_organization %}
+                    <li>
+                        <div class="col">
+                            <div class="title">Organizacja {{ item }}</div>
+                            <div class="subtitle">Cel i misja: {{ item.description }}</div>
+                        </div>
+
+                        <div class="col">
+                            <div class="text">{% for i in item.categories.all %}{{ i }}, {% endfor %}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="help--slides-pagination">
+                {% for n in p_organization.paginator.page_range %}
+                    {% if p_organization.number == n %}
+                        <a href="#help" class="btn btn--small btn--without-border active"
+                           data-page="2">{{ n }}</a>
+                    {% elif n > p_organization.number|add:'-5' and n < p_organization.number|add:'5' %}
+                        <a href="?o_page={{ n }}#help" class="btn btn--small btn--without-border"
+                           data-page="2">{{ n }}</a>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- SLIDE 3 -->
+        <div {% if request.GET.urlencode.0 == 'c' %}class="help--slides active"
+             {% else %}class="help--slides"{% endif %} data-id="3">
+            <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, Organizacji pozarządowych oraz lokalnych
+                zbiórek, z którymi współpracujemy. Możesz sprawdzić czym
+                się zajmują, komu pomagają i czego potrzebują.</p>
+            <ul class="help--slides-items">
+                {% for item in p_collections %}
+                    <li>
+                        <div class="col">
+                            <div class="title">Lokalna zbiórka {{ item }}</div>
+                            <div class="subtitle">Cel i misja: {{ item.description }}</div>
+                        </div>
+
+                        <div class="col">
+                            <div class="text">{% for i in item.categories.all %}{{ i }}, {% endfor %}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="help--slides-pagination">
+                {% for n in p_collections.paginator.page_range %}
+                    {% if p_collections.number == n %}
+                        <a href="#help" class="btn btn--small btn--without-border active"
+                           data-page="2">{{ n }}</a>
+                    {% elif n > p_collections.number|add:'-5' and n < p_collections.number|add:'5' %}
+                        <a href="?o_page={{ n }}#help" class="btn btn--small btn--without-border"
+                           data-page="2">{{ n }}</a>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+{% endblock %}

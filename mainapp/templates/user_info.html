@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block slogan %}
+    <div id="user">
+        {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
+        <h2>Witaj {{ user.first_name }}!<br>
+            Informacje o Twoim koncie:</h2>
+        <div class="slogan--steps-title">
+            <ul>
+                <li>Imię: {{ user.first_name }}</li>
+                <li>Nazwisko: {{ user.last_name }}</li>
+                <li>Adres mailowy: {{ user.email }}</li>
+                <br>
+                <a href="{% url 'user_edit' %}">
+                    <button class="btn">Edytuj konto</button>
+                </a>
+                <a href="{% url 'user_edit_pwd' %}">
+                    <button class="btn">Zmień hasło</button>
+                </a>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+{% block 4steps %}
+{% endblock %}
+{% block content %}
+{% endblock %}
