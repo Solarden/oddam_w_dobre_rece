@@ -7,19 +7,14 @@
             {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
             <h2>Edycja konta {{ user.username }}</h2>
             <div class="slogan--steps-title">
-                <ul>
-                    <li><label>Wprowadź swoje hasło:
-                        <input type="password" placeholder="Wprowadź swoje hasło" name="password">
-                    </label></li>
-                    <li><label>Wprowadź nowe hasło:
-                        <input type="password" placeholder="Wprowadź nowe hasło" name="password_new">
-                    </label></li>
-                    <li><label>Powtórz nowe hasło:
-                        <input type="password" placeholder="Powtórz nowe hasło" name="password_new2">
-                    </label></li>
-                    <br>
-                    <input type="submit" value="Zapisz" class="btn">
-                </ul>
+                Wprowadź hasło:
+                <input type="password" placeholder="Wprowadź swoje hasło" name="password"><br>
+                Nowe hasło:
+                <input type="password" placeholder="Wprowadź nowe hasło" name="password_new"><br>
+                Powtórz hasło:
+                <input type="password" placeholder="Powtórz nowe hasło" name="password_new2"><br>
+                <br>
+                <input type="submit" value="Zapisz" class="btn">
             </div>
         </div>
     </form>
