@@ -16,19 +16,15 @@
                 <h3>Oddanych worków</h3>
                 <p>Dzięki Państwa wsparciu udało nam się zebrać już tyle worków w dobre ręce!</p>
             </div>
-
             <div class="stats--item">
                 <em>{{ stat_institutions }}</em>
                 <h3>Wspartych organizacji</h3>
                 <p>Każda ze wspartych instytucji serdecznie dziękuje Państwu za zaufanie!</p>
             </div>
-
         </div>
     </section>
-
     <section id="steps" class="steps">
         <h2>Wystarczą 4 proste kroki</h2>
-
         <div class="steps--container">
             <div class="steps--item">
                 <span class="icon icon--hands"></span>
@@ -51,10 +47,8 @@
                 <p>kurier przyjedzie w dogodnym terminie</p>
             </div>
         </div>
-
         <a href="{% url 'register' %}#register" class="btn btn--large">Załóż konto</a>
     </section>
-
     <section id="about-us" class="about-us">
         <div class="about-us--text">
             <h2>O nas</h2>
@@ -64,7 +58,6 @@
         </div>
         <div class="about-us--image"><img src="../static/images/about-us.jpg" alt="People in circle"/></div>
     </section>
-
     <section id="help" class="help">
         <h2>Komu pomagamy?</h2>
         <ul class="help--buttons">
@@ -77,7 +70,6 @@
                                {% else %}class="btn btn--without-border"{% endif %}>Organizacjom pozarządowym</a></li>
             <li data-id="3"><a href="#help" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
         </ul>
-
         <!-- SLIDE 1 -->
         <div {% if request.GET.urlencode.0 == 'f' %}class="help--slides active"
              {% elif request.GET.urlencode.0 is Null %}class="help--slides active"
@@ -85,7 +77,6 @@
             <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, Organizacji pozarządowych oraz lokalnych
                 zbiórek, z którymi współpracujemy. Możesz sprawdzić czym
                 się zajmują, komu pomagają i czego potrzebują.</p>
-
             <ul class="help--slides-items">
                 {% for item in p_foundation %}
                     <li>
@@ -117,8 +108,6 @@
                 {% endfor %}
             </ul>
         </div>
-
-
         <!-- SLIDE 2 -->
         <div {% if request.GET.urlencode.0 == 'o' %}class="help--slides active"
              {% else %}class="help--slides"{% endif %} data-id="2">
@@ -186,5 +175,4 @@
             </ul>
         </div>
     </section>
-
 {% endblock %}
