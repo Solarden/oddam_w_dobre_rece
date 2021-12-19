@@ -1,3 +1,6 @@
-# oddam_w_dobre_rece
+# Oddam w dobre ręce (Pass in good hands)
 
-WORK IN PROGRESS
+Django web app with PostgreSQL database. Website is made for companies which specialise in getting in touch with trusted institutions collecting goods for people in bad life situation. Website makes it possible for users to pass bags of goods straight to institutions. Only available in polish language.
+
+# Try me out!
+Heroku conf WIP
